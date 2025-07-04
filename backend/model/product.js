@@ -13,7 +13,8 @@ const productSchema = mongoose.Schema({
         required: true,
         type: String
     },
-    imgUrl: String,
+    imgUrl: String, // Ana resim (backward compatibility için)
+    images: [String], // Birden fazla resim için array
     date: {
         type: String,
         default: Date.now

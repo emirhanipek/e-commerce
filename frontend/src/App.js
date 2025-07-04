@@ -1,15 +1,21 @@
 import './App.css';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, useLocation } from 'react-router-dom';
 import routes from './routes';
 import Header from './components/Header';
 
 function App() {
   const showRoutes = useRoutes(routes);
+  const location = useLocation();
+  
+  // Hide header on auth pages
+  const hideHeader = ['/login', '/register'].includes(location.pathname);
 
   return (
     <div className="App">
-      <Header />
-      {showRoutes}
+      {!hideHeader && <Header />}
+      <div className={hideHeader ? 'auth-layout' : ''}>
+        {showRoutes}
+      </div>
     </div>
   );
 }

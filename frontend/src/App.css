@@ -1,85 +1,29 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .App {
   display: flex;
   justify-content: center;
-
 }
 
 .App>div {
-  padding-top: 60px;
+  padding-top: 120px; /* Modern header için daha fazla üst boşluk */
 }
 
-/* //------------------Header STYLE ---------------------------------------- */
+.auth-layout {
+  padding-top: 0 !important; /* Auth sayfalarında header yok */
+}
 
-
-header {
-  display: flex;
-  justify-content: space-around;
-  position: fixed;
+/* Landing page için özel düzenlemeler */
+.App>div:has(.landing-page) {
+  padding-top: 0 !important; /* Landing page tam ekran */
   width: 100%;
-  border-bottom: 1px solid lightgray;
-  background-color: #007bff;
-  z-index: 1;
 }
 
-header div {
-  display: flex;
-}
-
-header>a {
-  text-decoration: none;
-  padding: 12px;
-  font-weight: bold;
-  font-size: 20px;
-  color: white;
-}
-
-header ul {
-  display: flex;
-  list-style-type: none;
-  padding-top: 15px;
-}
-
-header li a {
-  color: rgb(213, 212, 212);
-  text-decoration: none;
-  padding: 10px;
-}
-
-header li a.active {
-  color: white;
-}
-
-@media only screen and (max-width:850px) {
-  header .nav-left {
-    position: absolute;
-    background-color: #007bff;
-    right: 0px;
-    top: 50px;
-    display: none;
-    border-bottom-left-radius: 5px;
-  }
-
-  header .nav-left.open {
-    display: block;
-  }
-
-  header .nav-left ul {
-    flex-direction: column;
-  }
-
-  header .nav-left ul li {
-    padding: 15px 70px;
-  }
-
-  span.cart {
-    display: none;
-  }
-}
+/* Modern Header styles are now in Header.css */
 
 /* //------------------Table STYLE ---------------------------------------- */
 

@@ -3,14 +3,31 @@
   display: flex;
   justify-content: space-around;
 }
+
+.layout.home-layout {
+  width: 100%;
+  min-width: 100%;
+  justify-content: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
 @media only screen and (max-width:1080px){
   .layout{
     flex-direction: column;
   }
+  
+  .layout.home-layout {
+    flex-direction: row;
+  }
 }
+
 .layout .content{
   width: 850px;
 }
+
 @media only screen and (max-width:850px){
     .layout .content{
        width: 99%;

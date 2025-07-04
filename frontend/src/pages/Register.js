@@ -1,10 +1,7 @@
 import AuthForm from "../components/form/AuthForm";
 
-export default function Register(){
-
-   return(
-         <div>
-            <AuthForm title={"Register"} />
-         </div>
-      )
+export default function Register() {
+    return (
+        <AuthForm title={"Register"} />
+    )
 }

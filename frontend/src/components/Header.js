@@ -1,70 +1,111 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-export default function Header() {
+import { useState } from "react";
+import './Header.css';
 
+export default function Header() {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const cart = useSelector(state => state.shop.cart);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const clickBurger = () => {
-        const burger = document.querySelector('.burger-menu');
-        const nav = document.querySelector('.nav-left');
-        burger.classList.toggle('close');
-        nav.classList.toggle('open');
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
     }
 
     return (
-        <header>
-            <Link to="/">Shopping</Link>
-            <div>
-                <nav className="nav-left">
-                    <ul>
-                        <li>
-                            <NavLink to="/">Home</NavLink>
-                        </li>
-                        {isAuthenticated &&
-                            <>
-                                <li>
-                                    <NavLink to="/add_product">Add Product</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin_product">Admin Products</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/order">Orders</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/logout">Logout</NavLink>
-                                </li>
-                            </>
-                        }
-                    </ul>
-                </nav>
+        <header className="modern-header">
+            {/* Top Bar */}
+            <div className="header-top">
+                <div className="container">
+                    <div className="top-left">
+                        <span>Ücretsiz Kargo 500₺ ve üzeri alışverişlerde</span>
+                    </div>
+                    <div className="top-right">
+                        <span>Müşteri Hizmetleri: 0850 123 45 67</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <nav>
-                    <ul>
-                        {isAuthenticated
-                            ? <li>
-                                <NavLink to={"/cart"} style={{ display: 'flex', alignItems: 'center', marginTop: -12, position: 'relative' }}>
-                                    <span className="cart">Cart</span>
-                                    <ShoppingCartOutlinedIcon style={{ paddingLeft: 2 }} />
-                                    <span style={{ fontSize: 10, color: 'white', backgroundColor: 'green', position: 'absolute', padding: '0px 3px', borderRadius: '50%', right: 5, top: 3 }}>{cart.length > 0 && cart.length}</span>
-                                </NavLink>
-                            </li>
-                            : <>
-                                <li><Link to="/login">Login</Link></li>
-                                <li><Link to="/register">Register</Link></li>
-                            </>
-                        }
-                    </ul>
-                </nav>
-            </div>
-            <div className="burger-menu" onClick={() => clickBurger()}>
-                <div className="line1"></div>
-                <div className="line2"></div>
-                <div className="line3"></div>
+
+            {/* Main Header */}
+            <div className="header-main">
+                <div className="container">
+                    <div className="header-content">
+                        {/* Logo */}
+                        <div className="logo">
+                            <Link to="/">
+                                <h1>ShopApp</h1>
+                                <span>Premium Store</span>
+                            </Link>
+                        </div>
+
+                        {/* Navigation & Actions */}
+                        <div className="nav-and-actions">
+                            {/* Navigation */}
+                            <nav className="header-nav-inline">
+                                <ul className={`nav-list-inline ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+                                    <li>
+                                        <NavLink to="/" className="nav-link">Ana Sayfa</NavLink>
+                                    </li>
+                                    {isAuthenticated && (
+                                        <>
+                                            <li>
+                                                <NavLink to="/add_product" className="nav-link">Ürün Ekle</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/admin_product" className="nav-link">Ürün Yönetimi</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/order" className="nav-link">Siparişlerim</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/logout" className="nav-link">Çıkış Yap</NavLink>
+                                            </li>
+                                        </>
+                                    )}
+                                </ul>
+                            </nav>
+
+                            {/* Header Actions */}
+                            <div className="header-actions">
+                                {isAuthenticated ? (
+                                    <>
+                                        <div className="action-item">
+                                            <PersonOutlineIcon />
+                                            <span>Hesabım</span>
+                                        </div>
+                                        <div className="action-item">
+                                            <FavoriteIcon />
+                                            <span>Favoriler</span>
+                                        </div>
+                                        <Link to="/cart" className="action-item cart-link">
+                                            <div className="cart-icon-wrapper">
+                                                <ShoppingCartOutlinedIcon />
+                                                {cart.length > 0 && (
+                                                    <span className="cart-badge">{cart.length}</span>
+                                                )}
+                                            </div>
+                                            <span>Sepetim</span>
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <div className="auth-buttons">
+                                        <Link to="/login" className="login-btn">Giriş Yap</Link>
+                                        <Link to="/register" className="register-btn">Üye Ol</Link>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Mobile Menu Toggle */}
+                        <div className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+                            <MenuIcon />
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
     )

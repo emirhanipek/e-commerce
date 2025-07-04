@@ -1,4 +1,12 @@
 {
+  "name": "mern-ecommerce-backend",
+  "version": "1.0.0",
+  "description": "MERN Stack E-commerce Backend",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
