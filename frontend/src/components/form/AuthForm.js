@@ -63,8 +63,8 @@ export default function AuthForm({ title, login }) {
                 {/* Form Card */}
                 <div className="auth-card">
                     <div className="auth-header">
-                        <h2>{login ? 'Hoş Geldiniz' : 'Hesap Oluşturun'}</h2>
-                        <p>{login ? 'Hesabınıza giriş yapın' : 'Hemen ücretsiz hesabınızı oluşturun'}</p>
+                        <h2>{login ? 'Welcome Back' : 'Create Account'}</h2>
+                        <p>{login ? 'Sign in to your account' : 'Create your free account now'}</p>
                     </div>
 
                     <form className="auth-form" onSubmit={onsubmit}>
@@ -120,16 +120,14 @@ export default function AuthForm({ title, login }) {
                                     {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                                 </button>
                             </div>
-                        </div>
-
-                        {login && (
+                        </div>                            {login && (
                             <div className="form-options">
                                 <label className="remember-me">
-                                    <input type="checkbox" />
-                                    <span>Beni hatırla</span>
+                                    <input type="checkbox" style={{ accentColor: '#b8860b' }} />
+                                    <span>Remember me</span>
                                 </label>
-                                <Link to="/forgot-password" className="forgot-password">
-                                    Şifremi unuttum
+                                <Link to="/forgot-password" className="forgot-password" style={{ color: '#b8860b' }}>
+                                    Forgot password?
                                 </Link>
                             </div>
                         )}
@@ -138,20 +136,24 @@ export default function AuthForm({ title, login }) {
                             type="submit" 
                             className={`auth-button ${isLoading ? 'loading' : ''}`}
                             disabled={isLoading}
+                            style={{
+                                background: '#b8860b',
+                                transition: 'all 0.3s ease'
+                            }}
                         >
                             {isLoading ? (
                                 <div className="loading-spinner"></div>
                             ) : (
-                                login ? 'Giriş Yap' : 'Hesap Oluştur'
+                                login ? 'Sign In' : 'Create Account'
                             )}
                         </button>
                     </form>
 
                     <div className="auth-footer">
                         <p>
-                            {login ? 'Hesabınız yok mu?' : 'Zaten hesabınız var mı?'}
-                            <Link to={login ? '/register' : '/login'} className="auth-link">
-                                {login ? 'Üye ol' : 'Giriş yap'}
+                            {login ? 'Don\'t have an account?' : 'Already have an account?'}
+                            <Link to={login ? '/register' : '/login'} className="auth-link" style={{ color: '#b8860b' }}>
+                                {login ? 'Sign up' : 'Sign in'}
                             </Link>
                         </p>
                     </div>
@@ -159,14 +161,14 @@ export default function AuthForm({ title, login }) {
                     {/* Social Login (Optional) */}
                     <div className="social-login">
                         <div className="divider">
-                            <span>veya</span>
+                            <span>or</span>
                         </div>
                         <div className="social-buttons">
-                            <button className="social-btn google">
-                                <span>Google ile devam et</span>
+                            <button className="social-btn google" style={{ borderColor: '#e5e7eb', ':hover': { borderColor: '#b8860b' } }}>
+                                <span>Continue with Google</span>
                             </button>
-                            <button className="social-btn facebook">
-                                <span>Facebook ile devam et</span>
+                            <button className="social-btn facebook" style={{ borderColor: '#e5e7eb', ':hover': { borderColor: '#b8860b' } }}>
+                                <span>Continue with Facebook</span>
                             </button>
                         </div>
                     </div>

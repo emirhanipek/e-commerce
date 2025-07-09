@@ -1,0 +1,72 @@
+/* Tailwind-specific Header Styles */
+
+/* Cart Badge */
+.cart-badge {
+  @apply absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs h-5 w-5 flex items-center justify-center font-semibold;
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+  @apply absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50 
+         invisible group-hover:visible transition-all duration-300 opacity-0 
+         group-hover:opacity-100 transform group-hover:translate-y-0 translate-y-1;
+}
+
+/* Mobile styles for dropdown */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    @apply static w-full shadow-none rounded-none py-0 visible opacity-100;
+  }
+  
+  .group-hover-wrapper {
+    @apply hidden;
+  }
+  
+  .mobile-menu-open .group-hover-wrapper {
+    @apply block;
+  }
+  
+  .header-actions .action-item {
+    @apply flex-row items-center space-x-2;
+  }
+}
+
+/* Add transitions for smooth interactions */
+.nav-link, .action-item, .login-btn, .register-btn {
+  @apply transition-all duration-300;
+}
+
+/* Enhance Header UI */
+.modern-header {
+  @apply bg-white shadow-md;
+}
+
+
+.header-main {
+  @apply bg-white py-4 border-b border-gray-200;
+}
+
+/* Fix logo alignment in mobile view */
+.logo-text {
+  @apply flex items-center;
+}
+
+/* Override Cart Icon styling */
+.cart-icon-wrapper {
+  @apply relative inline-flex;
+}
+
+/* Add hover effects to navigation */
+.nav-link:hover {
+  @apply text-purple-600;
+}
+
+/* Add active state for navigation */
+.nav-link.active {
+  @apply text-purple-600 font-medium;
+}
+
+/* Add shadow to dropdowns on hover */
+.group:hover .dropdown-menu {
+  @apply shadow-xl;
+}

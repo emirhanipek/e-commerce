@@ -16,7 +16,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   z-index: -2;
 }
 
@@ -27,9 +27,9 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
 }
 
 /* Auth Container */
@@ -142,9 +142,9 @@
 
 .input-wrapper input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #b8860b;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .input-wrapper input::placeholder {
@@ -164,7 +164,7 @@
 }
 
 .password-toggle:hover {
-  color: #667eea;
+  color: #b8860b;
 }
 
 /* Form Options */
@@ -185,25 +185,25 @@
 
 .remember-me input {
   margin-right: 8px;
-  accent-color: #667eea;
+  accent-color: #b8860b;
 }
 
 .forgot-password {
-  color: #667eea;
+  color: #b8860b;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .forgot-password:hover {
-  color: #5a6fd8;
+  color: #d4af37;
 }
 
 /* Auth Button */
 .auth-button {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #b8860b;
   color: white;
   border: none;
   border-radius: 12px;
@@ -217,7 +217,8 @@
 
 .auth-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 10px 25px rgba(184, 134, 11, 0.4);
+  background: #d4af37;
 }
 
 .auth-button:active {
@@ -264,7 +265,7 @@
 }
 
 .auth-link {
-  color: #667eea;
+  color: #b8860b;
   text-decoration: none;
   font-weight: 600;
   margin-left: 5px;
@@ -272,7 +273,7 @@
 }
 
 .auth-link:hover {
-  color: #5a6fd8;
+  color: #d4af37;
 }
 
 /* Social Login */
@@ -326,16 +327,16 @@
 }
 
 .social-btn:hover {
-  border-color: #667eea;
+  border-color: #b8860b;
   background: #f8f9fa;
 }
 
 .social-btn.google:hover {
-  border-color: #db4437;
+  border-color: #b8860b;
 }
 
 .social-btn.facebook:hover {
-  border-color: #4267b2;
+  border-color: #b8860b;
 }
 
 /* Responsive Design */
@@ -374,11 +375,23 @@
   }
 }
 
+/* Card and brand animations are applied in the main selectors */
 .auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   animation: fadeInUp 0.6s ease-out;
 }
 
+/* Auth Brand */
 .auth-brand {
+  text-align: center;
+  margin-bottom: 30px;
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
@@ -429,7 +442,12 @@ flex-direction: column;
 .form button{
     font-weight: bold;
     font-size: 15px;
-    color:white;
-    background-color: #007bff;
-    border:none;
+    color: white;
+    background-color: #b8860b;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.form button:hover {
+  background-color: #d4af37;
 }

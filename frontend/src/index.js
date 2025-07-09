@@ -6,6 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/index';
 import { BrowserRouter } from 'react-router-dom';
+import logReduxState from './utility/debug';
+
+// Log initial state
+console.log('Redux store initial state:');
+logReduxState(store);
+
+// Subscribe to state changes
+store.subscribe(() => {
+  console.log('Redux store updated:');
+  logReduxState(store);
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

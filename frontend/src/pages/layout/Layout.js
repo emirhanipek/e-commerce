@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Navigation from"../../components/Navigation/Navigation"
+import Footer from "../../components/Footer";
 import'./layout.css';
 
 export default function Layout() {
@@ -12,6 +13,7 @@ export default function Layout() {
             <div className={isHomePage ? 'full-width' : 'content'}>
                 <Outlet />
             </div>
+            {!isHomePage && <Footer />}
         </div>
     )
 }

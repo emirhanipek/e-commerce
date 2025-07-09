@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 const app = express();
 const multer = require('multer');
 const path = require('path');
+
+// .env dosyasından çevre değişkenlerini yükle
+dotenv.config();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,6 +43,7 @@ const upload = multer({
 const authRouter = require('./routers/auth');
 const userRouter = require('./routers/user');
 const shopRouter = require('./routers/shop');
+const categoryRouter = require('./routers/category');
 
 // Test endpoint
 app.get('/', (req, res) => {
@@ -48,7 +53,8 @@ app.get('/', (req, res) => {
         endpoints: {
             auth: '/register, /login',
             shop: '/products, /categories',
-            user: '/cart, /orders'
+            user: '/cart, /orders',
+            category: '/categories'
         }
     });
 });
@@ -56,16 +62,23 @@ app.get('/', (req, res) => {
 app.use(authRouter);
 app.use(userRouter);
 app.use(shopRouter);
+app.use(categoryRouter);
 
 app.use('/public/img', express.static('./public/img'));
 app.use(express.static(path.join(__dirname, 'public/img')));
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://ahmetveli:ahmetveli@cluster0.a7ff9o2.mongodb.net/e-commerce?retryWrites=true&w=majority')
+// Çevre değişkeninden MongoDB bağlantı dizesini al
+const MONGODB_URI = process.env.MONGODB_URI;
+
+mongoose.connect(MONGODB_URI)
     .then(() => {
-        app.listen(8000, () => {
-            console.log('it is okey');
+        console.log('MongoDB veritabanına başarıyla bağlandı');
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`Sunucu ${process.env.PORT || 8000} portunda çalışıyor`);
         });
-    }).catch(err => { console.log(err) });
+    }).catch(err => { 
+        console.log('MongoDB bağlantı hatası:', err) 
+    });
 

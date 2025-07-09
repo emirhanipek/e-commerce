@@ -2,8 +2,8 @@ const User = require('../model/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const createToken = (userId) => {
-    return jwt.sign({ userId }, 'secret_key');
+const createToken = (userId, role) => {
+    return jwt.sign({ id: userId, role: role }, 'secret_key');
 }
 exports.Register = (req, res) => {
     const { name, email, password } = req.body;
@@ -17,7 +17,7 @@ exports.Register = (req, res) => {
                 bcrypt.hash(password, 10)
                     .then(hashedPassword => {
                         const newUser = new User({
-                            name: name, email: email, password: hashedPassword, cart: []
+                            name: name, email: email, password: hashedPassword, role: 'user', cart: []
                         });
                         newUser.save();
                         res.send({
@@ -35,10 +35,11 @@ exports.Login = (req, res) => {
                 bcrypt.compare(password, user.password)
                     .then(comparedPassword => {
                         if (comparedPassword) {
-                            const token = createToken(user.id);
+                            const token = createToken(user.id, user.role);
                             res.send({
                                 accessToken: token,
-                                userId: user.id
+                                userId: user.id,
+                                role: user.role
                             })
                         } else {
                             res.send({

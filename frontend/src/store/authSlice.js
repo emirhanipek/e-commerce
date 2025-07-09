@@ -3,7 +3,10 @@ import { api } from '../utility/api';
 
 const initialState = {
     isAuthenticated: localStorage.getItem('accessToken') ? true : false,
-    userId: null,
+    userId: localStorage.getItem('userId') || null,
+    user: {
+        role: localStorage.getItem('userRole') || null
+    },
     message: null
 }
 
@@ -32,6 +35,8 @@ const auth = createSlice({
         logout: (state) => {
             localStorage.clear();
             state.isAuthenticated = false;
+            state.userId = null;
+            state.user = { role: null };
         }
     },
     extraReducers: (builder) => {
@@ -39,8 +44,12 @@ const auth = createSlice({
             if (action.payload.accessToken) {
                 state.isAuthenticated = true;
                 state.userId = action.payload.userId;
+                state.user = { 
+                    role: action.payload.role
+                };
                 localStorage.setItem('accessToken', action.payload.accessToken);
                 localStorage.setItem('userId', action.payload.userId);
+                localStorage.setItem('userRole', action.payload.role);
             } else {
                 state.message = action.payload.message;
             }

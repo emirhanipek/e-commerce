@@ -1,25 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Products from "../components/products/Products";
+import Footer from "../components/Footer";
 import { getProducts } from "../store/productSlice";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import SecurityIcon from '@mui/icons-material/Security';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import { fetchCategories } from "../store/categorySlice";
 import './Home.css';
+import { Helmet } from "react-helmet";
 
 export default function Home() {
   const dispatch = useDispatch();
   const products = useSelector(state => state.product.products);
+  const categories = useSelector(state => state.categories.items);
+  const [currentSlide, setCurrentSlide] = useState(0);
   
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(fetchCategories());
     if(document.querySelector('.prices')) {
       document.querySelector('.prices').style.display='none';
     }
-  }, [])
+  }, [dispatch])
+
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(slideInterval);
+  }, []);
 
   const scrollToProducts = () => {
     document.querySelector('.featured-products').scrollIntoView({ 
@@ -27,60 +34,165 @@ export default function Home() {
     });
   }
 
+  const slides = [
+    {
+      title: "Eşsiz Deri Sanatı",
+      subtitle: "El İşçiliğiyle Hazırlanmış Premium Deri Ürünler",
+      description: "Geleneksel zanaat teknikleri ile modern tasarımın buluştuğu koleksiyonumuz",
+      image: "/images/slider1.jpg"
+    },
+    {
+      title: "Zarafet ve Kalite",
+      subtitle: "Doğal Deriden Üretilen Lüks Aksesuarlar",
+      description: "Her detayında mükemmellik arayışının yansıdığı özel tasarım ürünler",
+      image: "/images/slider2.jpg"
+    },
+    {
+      title: "Ustalık ve Gelenek",
+      subtitle: "Nesilden Nesile Aktarılan Deri İşçiliği",
+      description: "Yılların deneyimi ve modern teknolojinin mükemmel uyumu",
+      image: "/images/slider3.webp"
+    }
+  ];
+
   return (
-    <div className="landing-page">
-      {/* Hero Section - Full Screen Slider */}
+    <div className="home-page">
+      <Helmet>
+        <title>Sergio Ferrari | Toptan Deri Cüzdan | İstanbul El Yapımı Deri Cüzdanlar</title>
+        <meta name="description" content="Sergio Ferrari, İstanbul'da el yapımı hakiki deri cüzdan üreticisi. Toptan deri cüzdan, erkek ve kadın deri cüzdan modelleri uygun fiyatlarla." />
+        <meta name="keywords" content="deri cüzdan, toptan deri cüzdan, deri cüzdan istanbul, sergio ferrari deri cüzdan, erkek deri cüzdan, kadın deri cüzdan" />
+        <link rel="canonical" href="https://sergioferrari.com" />
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Store",
+              "name": "Sergio Ferrari Deri Cüzdan",
+              "description": "İstanbul'un en kaliteli deri cüzdan üreticisi",
+              "url": "https://sergioferrari.com",
+              "telephone": "+90 212 123 45 67",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "İstanbul",
+                "addressLocality": "İstanbul",
+                "addressRegion": "İstanbul",
+                "postalCode": "34000",
+                "addressCountry": "TR"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "41.0082",
+                "longitude": "28.9784"
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+              },
+              "priceRange": "₺₺"
+            }
+          `}
+        </script>
+      </Helmet>
+      
+      {/* Hero Section - Full Width Slider */}
       <section className="hero-section">
         <div className="hero-slider">
-          <div className="hero-slide active">
-            <div className="hero-content">
-              <div className="hero-text">
-                <h1>Premium E-Ticaret Deneyimi</h1>
-                <p>En kaliteli ürünler, en uygun fiyatlar ve mükemmel hizmet anlayışı ile karşınızdayız.</p>
-                <div className="hero-buttons">
-                  <button className="btn-primary" onClick={scrollToProducts}>
-                    Ürünleri Keşfet
-                    <ArrowDownwardIcon />
-                  </button>
-                  <Link to="/register" className="btn-secondary">
-                    Üye Ol
-                  </Link>
-                </div>
+          {slides.map((slide, index) => (
+            <div key={index} className={`hero-slide ${index === currentSlide ? 'active' : ''}`}>
+              <div className="hero-background" style={{backgroundImage: `url(${slide.image})`}}>
+                <div className="hero-overlay"></div>
               </div>
-              <div className="hero-image">
-                <div className="floating-card">
-                  <ShoppingBagIcon />
-                  <span>Premium Alışveriş</span>
+              <div className="hero-content">
+                <div className="hero-text">
+                  <h1>{slide.title}</h1>
+                  <h2>{slide.subtitle}</h2>
+                  <p>{slide.description}</p>
+                  <div className="hero-buttons">
+                    <button className="btn-primary" onClick={scrollToProducts}>
+                      Koleksiyonu Keşfet
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
         
-        {/* Scroll Indicator */}
-        <div className="scroll-indicator" onClick={scrollToProducts}>
-          <ArrowDownwardIcon />
+        {/* Slider Navigation */}
+        <div className="slider-nav">
+          {slides.map((_, index) => (
+            <button 
+              key={index} 
+              className={`nav-dot ${index === currentSlide ? 'active' : ''}`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
         </div>
+        
+       
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
+      {/* Category Cards Section */}
+      <section className="category-section">
         <div className="container">
-          <div className="features-grid">
-            <div className="feature-card">
-              <SecurityIcon className="feature-icon" />
-              <h3>Güvenli Alışveriş</h3>
-              <p>256-bit SSL sertifikası ile güvenli ödeme</p>
+          <p className="p-4"></p>
+          <div className="section-header pt-3">
+            <h2>Kategoriler</h2>
+            <p>Özenle seçilmiş deri ürün koleksiyonlarımız</p>
+          </div>
+          <div className="category-grid">
+            <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-[450px]">
+              <img 
+                src="/images/erkek_cuzdan.jpg" 
+                alt="Erkek Cüzdan" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center">
+                <div className="text-center px-6 py-4">
+                  <h3 className="text-white text-2xl font-semibold tracking-wide mb-2">Erkek Cüzdan</h3>
+                  <div className="w-12 h-1 bg-amber-400 mx-auto my-2 transform origin-left transition-all duration-500 group-hover:w-24"></div>
+                  <p className="text-white/80 mt-2 text-sm">El işçiliği ile hazırlanmış özel deri cüzdanlar</p>
+                </div>
+              </div>
             </div>
-            <div className="feature-card">
-              <LocalShippingIcon className="feature-icon" />
-              <h3>Hızlı Teslimat</h3>
-              <p>24 saat içinde ücretsiz kargo</p>
+
+            <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-[450px]">
+              <img 
+                src="/images/kadin_cuzdan.jpg" 
+                alt="Kadın Cüzdan" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center">
+                <div className="text-center px-6 py-4">
+                  <h3 className="text-white text-2xl font-semibold tracking-wide mb-2">Kadın Cüzdan</h3>
+                  <div className="w-12 h-1 bg-amber-400 mx-auto my-2 transform origin-left transition-all duration-500 group-hover:w-24"></div>
+                  <p className="text-white/80 mt-2 text-sm">Zarif tasarımlı premium deri cüzdanlar</p>
+
+                </div>
+              </div>
             </div>
-            <div className="feature-card">
-              <SupportAgentIcon className="feature-icon" />
-              <h3>7/24 Destek</h3>
-              <p>Müşteri memnuniyeti önceliğimiz</p>
+
+            <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-[450px]">
+              <img 
+                src="/images/klac_cuzdan.jpg" 
+                alt="Bütün Modeller" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center">
+                <div className="text-center px-6 py-4">
+                  <h3 className="text-white text-2xl font-semibold tracking-wide mb-2">Klac</h3>
+                  <div className="w-12 h-1 bg-amber-400 mx-auto my-2 transform origin-left transition-all duration-500 group-hover:w-24"></div>
+                  <p className="text-white/80 mt-2 text-sm">Tüm deri ürün koleksiyonumuzu keşfedin</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -91,13 +203,26 @@ export default function Home() {
         <div className="container">
           <div className="section-header">
             <h2>Öne Çıkan Ürünler</h2>
-            <p>Size özel seçilmiş premium ürünler</p>
+            <p>El işçiliğiyle hazırlanmış özel tasarım ürünler</p>
           </div>
-          <Products products={products.slice(0, 6)} />
-          <div className="view-all-container">
-            <Link to="/products" className="btn-primary">
-              Tüm Ürünleri Görüntüle
-            </Link>
+          <div className="products-grid">
+            {products.slice(0, 3).map(product => (
+              <Link key={product._id} to={`/product/${product._id}`} className="product-card">
+                <div className="product-image">
+                  <img 
+                    src={product.images && product.images.length > 0 
+                      ? `http://localhost:8000/public/img/${product.images[0]}` 
+                      : '/api/placeholder/300/300'} 
+                    alt={product.name}
+                    onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
+                  />
+                </div>
+                <div className="product-info">
+                  <h3>{product.name}</h3>
+                  <p className="product-description">{product.description}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -107,110 +232,30 @@ export default function Home() {
         <div className="container">
           <div className="about-content">
             <div className="about-text">
-              <h2>Hakkımızda</h2>
+              <h2>Ustalık ve Gelenek</h2>
               <p>
-                2020 yılından beri müşterilerimize en kaliteli ürünleri en uygun fiyatlarla sunuyoruz. 
-                Teknoloji, moda, ev & yaşam kategorilerinde binlerce ürün seçeneği ile sizlere hizmet veriyoruz.
+                Yılların deneyimi ve geleneksel deri işçiliği tekniklerini modern tasarım anlayışıyla 
+                harmanlayarak, her ürünümüzü özenle hazırlıyoruz. Kaliteli hammaddeler ve titiz 
+                işçilikle ürettiğimiz deri ürünler, zarafet ve dayanıklılığın mükemmel birleşimidir.
               </p>
               <p>
-                Müşteri memnuniyetini ön planda tutan anlayışımız, hızlı teslimat ağımız ve 
-                7/24 müşteri desteğimiz ile e-ticaret sektöründe öncü olmaya devam ediyoruz.
+                Müşterilerimizin memnuniyeti ve güveni bizim için en değerli varlıktır. 
+                Her üründe kalite standardımızı koruyarak, size en iyisini sunma hedefindeyiz.
               </p>
-              <div className="stats">
-                <div className="stat">
-                  <h3>50K+</h3>
-                  <p>Mutlu Müşteri</p>
-                </div>
-                <div className="stat">
-                  <h3>10K+</h3>
-                  <p>Ürün Çeşidi</p>
-                </div>
-                <div className="stat">
-                  <h3>99%</h3>
-                  <p>Memnuniyet Oranı</p>
-                </div>
-              </div>
             </div>
             <div className="about-image">
-              <div className="about-card">
-                <h4>Vizyonumuz</h4>
-                <p>E-ticaret sektöründe kalite ve güvenin adresi olmak</p>
+              <div className="about-visual">
+                <div className="quality-badge">
+                  <span>Premium</span>
+                  <span>Kalite</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <div className="container">
-          <div className="newsletter-content">
-            <h2>Kampanyalardan Haberdar Olun</h2>
-            <p>E-posta adresinizi girerek özel indirimler ve yeni ürünlerden ilk siz haberdar olun.</p>
-            <form className="newsletter-form">
-              <input type="email" placeholder="E-posta adresiniz" />
-              <button type="submit">Abone Ol</button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="modern-footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <div className="footer-brand">
-                <h3>ShopApp</h3>
-                <p>Premium e-ticaret deneyimi</p>
-              </div>
-              <div className="social-links">
-                <a href="#" aria-label="Facebook">FB</a>
-                <a href="#" aria-label="Instagram">IG</a>
-                <a href="#" aria-label="Twitter">TW</a>
-                <a href="#" aria-label="LinkedIn">LI</a>
-              </div>
-            </div>
-            
-            <div className="footer-section">
-              <h4>Hızlı Linkler</h4>
-              <ul>
-                <li><Link to="/">Ana Sayfa</Link></li>
-                <li><Link to="/products">Ürünler</Link></li>
-                <li><Link to="/about">Hakkımızda</Link></li>
-                <li><Link to="/contact">İletişim</Link></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h4>Müşteri Hizmetleri</h4>
-              <ul>
-                <li><Link to="/help">Yardım</Link></li>
-                <li><Link to="/returns">İade & Değişim</Link></li>
-                <li><Link to="/shipping">Kargo Bilgileri</Link></li>
-                <li><Link to="/faq">Sık Sorulan Sorular</Link></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h4>İletişim</h4>
-              <div className="contact-info">
-                <p>📧 info@shopapp.com</p>
-                <p>📞 0850 123 45 67</p>
-                <p>📍 İstanbul, Türkiye</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="footer-bottom">
-            <p>&copy; 2025 ShopApp. Tüm hakları saklıdır.</p>
-            <div className="footer-links">
-              <Link to="/privacy">Gizlilik Politikası</Link>
-              <Link to="/terms">Kullanım Şartları</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 
 const userController = require('../controllers/user');
-const { jwtVerify } = require('../utility/jwt');
+const { verifyToken } = require('../utility/jwt');
 
 // Multer storage configuration
 const storage = multer.diskStorage({
@@ -33,14 +33,14 @@ const upload = multer({
     }
 });
 
-router.get('/product/user/:userId', jwtVerify, userController.getProductsByUserId);
+router.get('/product/user/:userId', verifyToken, userController.getProductsByUserId);
 
 // Product routes with multiple image support
-router.post('/product', jwtVerify, upload.array('images', 10), userController.addProduct);
+router.post('/product', verifyToken, upload.array('images', 10), userController.addProduct);
 
-router.delete('/product/:productId', jwtVerify, userController.deleteProduct);
+router.delete('/product/:productId', verifyToken, userController.deleteProduct);
 
-router.put('/product', jwtVerify, upload.array('images', 10), userController.updateProduct);
+router.put('/product', verifyToken, upload.array('images', 10), userController.updateProduct);
 
 // Test endpoint for multiple image upload
 router.post('/test-upload', upload.array('images', 10), (req, res) => {
