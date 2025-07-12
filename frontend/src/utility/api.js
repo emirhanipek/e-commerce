@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-export const API_URL = 'http://localhost:8000';
+// Çevre değişkenlerinden API URL'lerini al
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 export function api() {
   return axios.create({
-    baseURL: API_URL
+    baseURL: API_BASE_URL
   });
 }

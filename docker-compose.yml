@@ -29,6 +29,26 @@ services:
       - mongodb
     networks:
       - app-network
+      
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://admin:123456@mongodb:27017/
+      - PORT=8000
+      - API_BASE_URL=/api/v1
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - app-network
 
 volumes:
   mongodb_data:

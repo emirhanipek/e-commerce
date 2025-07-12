@@ -51,18 +51,27 @@ app.get('/', (req, res) => {
         message: 'E-commerce Backend API is running!', 
         timestamp: new Date().toISOString(),
         endpoints: {
-            auth: '/register, /login',
-            shop: '/products, /categories',
-            user: '/cart, /orders',
-            category: '/categories'
+            base: '/api/v1',
+            auth: '/api/v1/register, /api/v1/login',
+            shop: '/api/v1/products, /api/v1/categories',
+            user: '/api/v1/cart, /api/v1/orders',
+            category: '/api/v1/categories'
         }
     });
 });
 
-app.use(authRouter);
 app.use(userRouter);
 app.use(shopRouter);
 app.use(categoryRouter);
+
+// Define base URL from environment variables
+const API_BASE_URL = process.env.API_BASE_URL || '/api/v1';
+
+// Apply base URL to all routers
+app.use(API_BASE_URL, authRouter);
+app.use(API_BASE_URL, userRouter);
+app.use(API_BASE_URL, shopRouter);
+app.use(API_BASE_URL, categoryRouter);
 
 app.use('/public/img', express.static('./public/img'));
 app.use(express.static(path.join(__dirname, 'public/img')));
