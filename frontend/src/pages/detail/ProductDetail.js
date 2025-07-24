@@ -20,10 +20,10 @@ export default function ProductDetail() {
 
     const getProductImages = () => {
         if (productDetail.images && Array.isArray(productDetail.images) && productDetail.images.length > 0) {
-            return productDetail.images.map(img => `http://api.sergioferrari.tr:8000/${img}`);
+            return productDetail.images.map(img => `https://api.sergioferrari.tr:8000/${img}`);
         }
         if (productDetail.imgUrl) {
-            return [`http://api.sergioferrari.tr:8000/${productDetail.imgUrl}`];
+            return [`https://api.sergioferrari.tr:8000/${productDetail.imgUrl}`];
         }
         return ['/placeholder-image.jpg'];
     };
