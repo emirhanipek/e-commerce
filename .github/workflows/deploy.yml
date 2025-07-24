@@ -1,37 +1,99 @@
-name: Deploy to VM
+name: 🚀 Deploy E-Commerce to Production VM
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild Docker images'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PROJECT_PATH: /var/www/sergioferrari/e-commerce
+  COMPOSE_FILE: docker-compose.yml
 
 jobs:
   deploy:
-    name: Deploy over SSH
+    name: 🔄 Deploy to Production Server
     runs-on: ubuntu-latest
-
+    environment: production
+    
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
-
-    - name: Upload files to VM
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        source: "."
-        target: "/var/www/sergioferrari/e-commerce"
-        strip_components: 1
-
-    - name: Restart Docker Compose
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd /var/www/sergioferrari/e-commerce
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d --build
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🔍 Display Deployment Info
+        run: |
+          echo "🎯 Deploying to: ${{ env.PROJECT_PATH }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Author: ${{ github.actor }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+      
+      - name: 📂 Upload Files to Production VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "."
+          target: ${{ env.PROJECT_PATH }}
+          strip_components: 1
+          rm: true
+          overwrite: true
+      
+      - name: 🐳 Deploy with Docker Compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 10m
+          script: |
+            set -e
+            
+            echo "🔧 Navigating to project directory..."
+            cd ${{ env.PROJECT_PATH }}
+            
+            echo "⏹️  Stopping existing containers..."
+            docker-compose down --remove-orphans
+            
+            echo "🧹 Cleaning up unused Docker resources..."
+            docker system prune -f
+            
+            echo "⬇️  Pulling latest images..."
+            docker-compose pull
+            
+            BUILD_FLAG=""
+            if [[ "${{ github.event.inputs.force_rebuild }}" == "true" ]]; then
+              echo "🔨 Force rebuilding images..."
+              BUILD_FLAG="--build --force-recreate"
+            fi
+            
+            echo "🚀 Starting services..."
+            docker-compose up -d $BUILD_FLAG
+            
+            echo "⏱️  Waiting for services to be ready..."
+            sleep 30
+            
+            echo "🔍 Checking service health..."
+            docker-compose ps
+            
+            echo "✅ Deployment completed successfully!"
+      
+      - name: 🎉 Deployment Success Notification
+        if: success()
+        run: |
+          echo "::notice title=Deployment Success::🎉 E-commerce application successfully deployed to production!"
+      
+      - name: ❌ Deployment Failure Notification
+        if: failure()
+        run: |
+          echo "::error title=Deployment Failed::❌ Deployment to production failed. Please check the logs."
