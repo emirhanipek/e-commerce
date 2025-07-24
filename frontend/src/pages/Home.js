@@ -36,7 +36,7 @@ export default function Home() {
 
   const slides = [
     {
-      title: "Eşsiz Deri Sanatı",
+      title: "Eşsiz Deri Sanatı ve Tasarımı",
       subtitle: "El İşçiliğiyle Hazırlanmış Premium Deri Ürünler",
       description: "Geleneksel zanaat teknikleri ile modern tasarımın buluştuğu koleksiyonumuz",
       image: "/images/slider1.jpg"
