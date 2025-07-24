@@ -47,6 +47,9 @@ jobs:
           strip_components: 1
           rm: true
           overwrite: true
+          timeout: 30s
+          command_timeout: 10m
+          debug: true
       
       - name: 🐳 Deploy with Docker Compose
         uses: appleboy/ssh-action@v1.0.3
