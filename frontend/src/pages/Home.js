@@ -211,7 +211,7 @@ export default function Home() {
                 <div className="product-image">
                   <img 
                     src={product.images && product.images.length > 0 
-                      ? `https://api.sergioferrari.tr:8000/public/img/${product.images[0]}` 
+                      ? `https://api.sergioferrari.tr/public/img/${product.images[0]}` 
                       : '/api/placeholder/300/300'} 
                     alt={product.name}
                     onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}

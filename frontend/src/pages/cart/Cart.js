@@ -56,7 +56,7 @@ export default function Cart() {
                                 cartItems.map(item => {
                                     return (
                                         <tr key={item.productId}>
-                                            <td><img src={`http://localhost:8000/${item.imgUrl}`} alt={item.name} /></td>
+                                            <td><img src={`https://api.sergioferrari.tr/${item.imgUrl}`} alt={item.name} /></td>
                                             <td>{item.name}</td>
                                             <td>${item.price.toFixed(2)}</td>
                                             <td>{item.quantity}</td>

@@ -176,7 +176,7 @@ export default function ProductForm({ title, data }) {
             if (data.images && Array.isArray(data.images) && data.images.length > 0) {
                 // If backend returns array of image URLs
                 const existingPreviews = data.images.map((imgUrl, index) => ({
-                    url: `http://localhost:8000/${imgUrl}`,
+                    url: `https://api.sergioferrari.tr/${imgUrl}`,
                     isExisting: true,
                     id: `existing-${index}`
                 }));
@@ -184,7 +184,7 @@ export default function ProductForm({ title, data }) {
             } else if (data.imgUrl) {
                 // Fallback for single image (backward compatibility)
                 setPreviewImages([{
-                    url: `http://localhost:8000/${data.imgUrl}`,
+                    url: `https://api.sergioferrari.tr/${data.imgUrl}`,
                     isExisting: true,
                     id: 'existing-single'
                 }]);

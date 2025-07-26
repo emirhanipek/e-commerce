@@ -32,10 +32,10 @@ export default function AdminProduct() {
 
     const getProductImage = (product) => {
         if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-            return `http://localhost:8000/${product.images[0]}`;
+            return `https://api.sergioferrari.tr/${product.images[0]}`;
         }
         if (product.imgUrl) {
-            return `http://localhost:8000/${product.imgUrl}`;
+            return `https://api.sergioferrari.tr/${product.imgUrl}`;
         }
         return '/placeholder-image.jpg';
     };

@@ -20,10 +20,10 @@ export default function ProductDetail() {
 
     const getProductImages = () => {
         if (productDetail.images && Array.isArray(productDetail.images) && productDetail.images.length > 0) {
-            return productDetail.images.map(img => `https://api.sergioferrari.tr:8000/${img}`);
+            return productDetail.images.map(img => `https://api.sergioferrari.tr/${img}`);
         }
         if (productDetail.imgUrl) {
-            return [`https://api.sergioferrari.tr:8000/${productDetail.imgUrl}`];
+            return [`https://api.sergioferrari.tr/${productDetail.imgUrl}`];
         }
         return ['/placeholder-image.jpg'];
     };
@@ -446,9 +446,9 @@ export default function ProductDetail() {
                                     >
                                         <img 
                                             src={product.images && product.images.length > 0 
-                                                ? `http://localhost:8000/${product.images[0]}` 
+                                                ? `https://api.sergioferrari.tr/${product.images[0]}` 
                                                 : product.imgUrl 
-                                                    ? `http://localhost:8000/${product.imgUrl}` 
+                                                    ? `https://api.sergioferrari.tr/${product.imgUrl}` 
                                                     : '/placeholder-image.jpg'
                                             }
                                             alt={product.name}
