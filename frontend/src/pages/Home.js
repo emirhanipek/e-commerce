@@ -61,7 +61,7 @@ export default function Home() {
         <title>Sergio Ferrari | Toptan Deri Cüzdan | İstanbul El Yapımı Deri Cüzdanlar</title>
         <meta name="description" content="Sergio Ferrari, İstanbul'da el yapımı hakiki deri cüzdan üreticisi. Toptan deri cüzdan, erkek ve kadın deri cüzdan modelleri uygun fiyatlarla." />
         <meta name="keywords" content="deri cüzdan, toptan deri cüzdan, deri cüzdan istanbul, sergio ferrari deri cüzdan, erkek deri cüzdan, kadın deri cüzdan" />
-        <link rel="canonical" href="https://sergioferrari.com" />
+        <link rel="canonical" href="https://sergioferrari.tr" />
         <script type="application/ld+json">
           {`
             {
@@ -69,7 +69,7 @@ export default function Home() {
               "@type": "Store",
               "name": "Sergio Ferrari Deri Cüzdan",
               "description": "İstanbul'un en kaliteli deri cüzdan üreticisi",
-              "url": "https://sergioferrari.com",
+              "url": "https://sergioferrari.tr",
               "telephone": "+90 212 123 45 67",
               "address": {
                 "@type": "PostalAddress",
@@ -199,22 +199,22 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="featured-products">
-        <div className="container">
-          <div className="section-header">
-            <h2>Öne Çıkan Ürünler</h2>
-            <p>El işçiliğiyle hazırlanmış özel tasarım ürünler</p>
-          </div>
-          <div className="products-grid">
-            {products.slice(0, 3).map(product => (
-              <Link key={product._id} to={`/product/${product._id}`} className="product-card">
-                <div className="product-image">
-                  <img 
-                    src={product.images && product.images.length > 0 
-                      ? `https://api.sergioferrari.tr/public/img/${product.images[0]}` 
-                      : '/api/placeholder/300/300'} 
-                    alt={product.name}
-                    onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
+        <section className="featured-products">
+          <div className="container">
+            <div className="section-header">
+          <h2>Öne Çıkan Ürünler</h2>
+          <p>El işçiliğiyle hazırlanmış özel tasarım ürünler</p>
+            </div>
+            <div className="products-grid">
+          {products.slice(0, 3).map(product => (
+            <Link key={product._id} to={`/product/${product._id}`} className="product-card">
+              <div className="product-image">
+            <img 
+              src={product.images && product.images.length > 0 
+                ? `${process.env.REACT_APP_API_URL}public/img/${product.images[0]}` 
+                : '/api/placeholder/300/300'} 
+              alt={product.name}
+              onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
                   />
                 </div>
                 <div className="product-info">

@@ -20,10 +20,10 @@ export default function ProductDetail() {
 
     const getProductImages = () => {
         if (productDetail.images && Array.isArray(productDetail.images) && productDetail.images.length > 0) {
-            return productDetail.images.map(img => `https://api.sergioferrari.tr/${img}`);
+            return productDetail.images.map(img => `${process.env.REACT_APP_API_URL}${img}`);
         }
         if (productDetail.imgUrl) {
-            return [`https://api.sergioferrari.tr/${productDetail.imgUrl}`];
+            return [`${process.env.REACT_APP_API_URL}${productDetail.imgUrl}`];
         }
         return ['/placeholder-image.jpg'];
     };
@@ -83,7 +83,7 @@ export default function ProductDetail() {
                 <title>{productDetail.name} | Deri Cüzdan | Sergio Ferrari</title>
                 <meta name="description" content={`${productDetail.name} - ${productDetail.description && productDetail.description.substring(0, 150)}... Kaliteli deri cüzdan, İstanbul'da üretim. Toptan deri cüzdan için iletişime geçin.`} />
                 <meta name="keywords" content={`deri cüzdan, ${productDetail.name}, toptan deri cüzdan, deri cüzdan istanbul, sergio ferrari, hakiki deri cüzdan`} />
-                <link rel="canonical" href={`https://sergioferrari.com/product/${productId}`} />
+                <link rel="canonical" href={`${process.env.REACT_APP_API_URL}product/${productId}`} />
                 <script type="application/ld+json">
                     {`
                         {
@@ -99,7 +99,7 @@ export default function ProductDetail() {
                             },
                             "offers": {
                                 "@type": "Offer",
-                                "url": "https://sergioferrari.com/product/${productId}",
+                                "url": "${process.env.REACT_APP_API_URL}product/${productId}",
                                 "priceCurrency": "TRY",
                                 "price": "${productDetail.price || 0}",
                                 "itemCondition": "https://schema.org/NewCondition",
@@ -446,9 +446,9 @@ export default function ProductDetail() {
                                     >
                                         <img 
                                             src={product.images && product.images.length > 0 
-                                                ? `https://api.sergioferrari.tr/${product.images[0]}` 
+                                                ? `${process.env.REACT_APP_API_URL}${product.images[0]}` 
                                                 : product.imgUrl 
-                                                    ? `https://api.sergioferrari.tr/${product.imgUrl}` 
+                                                    ? `${process.env.REACT_APP_API_URL}${product.imgUrl}` 
                                                     : '/placeholder-image.jpg'
                                             }
                                             alt={product.name}

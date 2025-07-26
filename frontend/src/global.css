@@ -1,0 +1,184 @@
+/* Global CSS - Birleştirilmiş stil dosyası */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Temel stil tanımları */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Global animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tailwind componet extensions */
+@layer components {
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .animate-scaleIn {
+    animation: scaleIn 0.5s ease-out;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors;
+  }
+  
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors;
+  }
+  
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300;
+  }
+  
+  /* Form styles */
+  .form-input {
+    @apply w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500;
+  }
+  
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-1;
+  }
+  
+  .form-error {
+    @apply mt-1 text-xs text-red-600 flex items-center;
+  }
+  
+  /* Product grid styles */
+  .product-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+  }
+  
+  .product-card {
+    @apply flex flex-col h-full overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+  }
+  
+  .product-image {
+    @apply w-full h-48 object-cover;
+  }
+  
+  .product-info {
+    @apply p-4 flex flex-col flex-grow;
+  }
+  
+  .product-title {
+    @apply text-lg font-semibold mb-2 text-gray-800;
+  }
+  
+  .product-price {
+    @apply text-xl font-bold text-primary-600;
+  }
+  
+  /* Header styles */
+  .header {
+    @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-md;
+  }
+  
+  .header-top {
+    @apply bg-black text-white text-sm py-2 text-center;
+  }
+  
+  .nav-link {
+    @apply px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors;
+  }
+  
+  .nav-link-active {
+    @apply text-primary-600 font-semibold;
+  }
+  
+  /* Cart badge */
+  .cart-badge {
+    @apply absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs h-5 w-5 flex items-center justify-center font-semibold;
+  }
+  
+  /* Responsive container */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Eski table stilleri */
+.container-table table {
+  border-collapse: collapse;
+  background-color: rgb(249, 249, 249);
+}
+
+.container-table table,
+th,
+td {
+  padding: 3px 40px;
+  border-bottom: 1px solid rgb(216, 214, 214);
+}
+
+.container-table thead tr {
+  border-radius: 10px;
+}
+
+.container-table th {
+  background-color: rgb(47, 47, 47);
+  color: white;
+}
+
+/* App.css'deki stil tanımları */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.App>div {
+  padding-top: 120px;
+  flex: 1;
+}
+
+.auth-layout {
+  padding-top: 0 !important;
+}

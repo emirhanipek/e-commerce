@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './global.css'; // Global CSS dosyasını kullan
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/index';
 import { BrowserRouter } from 'react-router-dom';
-import logReduxState from './utility/debug';
 
-// Log initial state
-logReduxState(store);
-
-// Subscribe to state changes
-store.subscribe(() => {
+// DEV ortamında debug, PROD ortamında kaldır
+const isDev = process.env.NODE_ENV === 'development';
+if (isDev) {
+  const logReduxState = require('./utility/debug').default;
+  // Başlangıç durumunu logla
   logReduxState(store);
-});
+  // Durum değişikliklerini takip et
+  store.subscribe(() => {
+    logReduxState(store);
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -26,4 +28,9 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
-reportWebVitals();
+
+// Sadece geliştirme ortamında raporla
+if (isDev) {
+  const reportWebVitals = require('./reportWebVitals').default;
+  reportWebVitals();
+}

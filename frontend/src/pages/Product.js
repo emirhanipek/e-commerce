@@ -106,11 +106,11 @@ export default function Product() {
     const getProductImage = (product) => {
         // Check if product has multiple images
         if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-            return `https://api.sergioferrari.tr/public/img/${product.images[0]}`; // Use first image
+            return `${process.env.REACT_APP_API_URL}public/img/${product.images[0]}`; // Use first image
         }
         // Fallback to single image field for backward compatibility
         if (product.imgUrl) {
-            return `https://api.sergioferrari.tr/public/img/${product.imgUrl}`;
+            return `${process.env.REACT_APP_API_URL}public/img/${product.imgUrl}`;
         }
         // Default placeholder if no image
         return '/api/placeholder/300/300';
@@ -122,7 +122,7 @@ export default function Product() {
                 <title>Deri Cüzdan Koleksiyonu | Toptan Deri Cüzdan | Sergio Ferrari</title>
                 <meta name="description" content="Sergio Ferrari deri cüzdan koleksiyonu. İstanbul'da üretilen, el yapımı erkek ve kadın deri cüzdanlar. Toptan deri cüzdan satışı için bizimle iletişime geçin." />
                 <meta name="keywords" content="deri cüzdan, toptan deri cüzdan, deri cüzdan istanbul, sergio ferrari, hakiki deri cüzdan, erkek deri cüzdan, kadın deri cüzdan" />
-                <link rel="canonical" href="https://sergioferrari.com/products" />
+                <link rel="canonical" href="https://sergioferrari.tr/products" />
                 <script type="application/ld+json">
                     {`
                         {

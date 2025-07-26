@@ -40,7 +40,7 @@ export default function Order() {
                                                     return (
                                                         <>
                                                             <tr>
-                                                                <td><img src={`https://api.sergioferrari.tr/${order.product.imgUrl}`}></img></td>
+                                                                <td><img src={`${process.env.REACT_APP_API_URL}${order.product.imgUrl}`}></img></td>
                                                                 <td>{order.product.name}</td>
                                                                 <td>{order.product.price}</td>
                                                                 <td>{order.quantity}</td>

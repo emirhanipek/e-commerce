@@ -6,11 +6,11 @@ export default function Products({products}) {
     const getProductImage = (product) => {
         // Check if product has multiple images
         if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-            return `https://api.sergioferrari.tr//public/img/${product.images[0]}`; // Use first image
+            return `${process.env.REACT_APP_API_URL}public/img/${product.images[0]}`; // Use first image
         }
         // Fallback to single image field for backward compatibility
         if (product.imgUrl) {
-            return `https://api.sergioferrari.tr//public/img/${product.imgUrl}`;
+            return `${process.env.REACT_APP_API_URL}public/img/${product.imgUrl}`;
         }
         // Default placeholder if no image
         return '/api/placeholder/300/300';

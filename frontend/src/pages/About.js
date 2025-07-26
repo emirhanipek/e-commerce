@@ -9,13 +9,13 @@ export default function About() {
         <title>Hakkımızda | Sergio Ferrari Deri Cüzdan | İstanbul Deri Atölyesi</title>
         <meta name="description" content="Sergio Ferrari Deri Cüzdan, 40 yılı aşkın deneyimiyle İstanbul'da el yapımı deri cüzdanlar üreten bir atölyedir. Toptan deri cüzdan üretimi konusunda uzmanlaşmış ekibimizle tanışın." />
         <meta name="keywords" content="sergio ferrari hakkında, deri cüzdan atölyesi, istanbul deri cüzdan üreticisi, toptan deri cüzdan imalatı, hakiki deri cüzdan üretimi" />
-        <link rel="canonical" href="https://sergioferrari.com/about" />
+        <link rel="canonical" href="https://sergioferrari.tr/about" />
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "AboutPage",
-              "url": "https://sergioferrari.com/about",
+              "url": "https://sergioferrari.tr/about",
               "name": "Sergio Ferrari Hakkında",
               "description": "Sergio Ferrari'nin hikayesi ve deri cüzdan üretim değerleri.",
               "mainEntity": {

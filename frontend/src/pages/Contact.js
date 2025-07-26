@@ -44,20 +44,20 @@ export default function Contact() {
         <title>İletişim | Sergio Ferrari Deri Cüzdan | Toptan Deri Cüzdan</title>
         <meta name="description" content="Sergio Ferrari ile iletişime geçin. İstanbul'da toptan deri cüzdan üreticisi ile doğrudan bağlantı kurun. Özel siparişler, toptan alımlar ve sorularınız için bizimle iletişime geçin." />
         <meta name="keywords" content="deri cüzdan iletişim, toptan deri cüzdan iletişim, sergio ferrari iletişim, istanbul deri cüzdan üretici" />
-        <link rel="canonical" href="https://sergioferrari.com/contact" />
+        <link rel="canonical" href="https://sergioferrari.tr/contact" />
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "ContactPage",
-              "url": "https://sergioferrari.com/contact",
+              "url": "https://sergioferrari.tr/contact",
               "name": "Sergio Ferrari İletişim",
               "description": "Sergio Ferrari ile iletişime geçin. İstanbul'da deri cüzdan üreticisi.",
               "mainEntity": {
                 "@type": "Organization",
                 "name": "Sergio Ferrari",
                 "telephone": "+90 212 123 45 67",
-                "email": "info@sergioferrari.com",
+                "email": "info@sergioferrari.tr",
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": "İstanbul",

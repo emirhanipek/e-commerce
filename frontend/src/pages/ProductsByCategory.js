@@ -79,7 +79,7 @@ export default function ProductsByCategory() {
           name="keywords" 
           content={`${categoryName || 'deri cüzdan'}, toptan deri cüzdan, deri cüzdan istanbul, sergio ferrari deri cüzdan, hakiki deri cüzdan`} 
         />
-        <link rel="canonical" href={`https://sergioferrari.com/products/${categoryName}/${categoryId}`} />
+        <link rel="canonical" href={`${process.env.REACT_APP_API_URL}products/${categoryName}/${categoryId}`} />
         <script type="application/ld+json">
           {`
             {
@@ -87,11 +87,11 @@ export default function ProductsByCategory() {
               "@type": "CollectionPage",
               "name": "${categoryName || 'Ürün Koleksiyonu'} - Sergio Ferrari",
               "description": "Sergio Ferrari ${categoryName || 'deri ürünler'} koleksiyonu. El yapımı, yüksek kaliteli deri cüzdanlar.",
-              "url": "https://sergioferrari.com/products/${categoryName}/${categoryId}",
+              "url": "${process.env.REACT_APP_API_URL}products/${categoryName}/${categoryId}",
               "isPartOf": {
                 "@type": "WebSite",
                 "name": "Sergio Ferrari",
-                "url": "https://sergioferrari.com"
+                "url": "${process.env.REACT_APP_API_URL}"
               },
               "numberOfItems": ${filteredProducts.length}
             }
