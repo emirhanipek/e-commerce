@@ -309,7 +309,7 @@ export default function ProductForm({ title, data }) {
                                         {dragActive ? 'Bırakın ve Yükleyin!' : 'Görselleri sürükleyip bırakın veya seçin'}
                                     </span>
                                     <span className="block mt-1 md:mt-2 text-xs md:text-sm text-gray-500">
-                                        PNG, JPG, JPEG (Max 5MB)
+                                        PNG, JPG, JPEG (Max 10MB)
                                     </span>
                                 </label>
                             </div>
