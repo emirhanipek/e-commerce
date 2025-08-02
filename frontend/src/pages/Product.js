@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getProducts } from '../store/productSlice';
 import { fetchCategories } from '../store/categorySlice';
 import Footer from '../components/Footer';
-import { ShoppingBag, SlidersHorizontal, Grid3X3, List, Search, X, ChevronDown, Star, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Grid3X3, List, Search, X, Star, ChevronRight } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 export default function Product() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
     const products = useSelector(state => state.product.products);
     const categories = useSelector(state => state.categories.items);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [viewType, setViewType] = useState('grid'); // 'grid' or 'list'
     const [sortOption, setSortOption] = useState('featured');
     const [priceRange, setPriceRange] = useState([0, 5000]);
@@ -21,10 +18,15 @@ export default function Product() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
 
-    useEffect(() => {
+    // Memoized data fetching
+    const fetchData = useCallback(() => {
         dispatch(getProducts());
         dispatch(fetchCategories());
     }, [dispatch]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     useEffect(() => {
         // Apply filters and sorting
@@ -72,38 +74,20 @@ export default function Product() {
         setFilteredProducts(result);
     }, [products, searchQuery, selectedCategories, priceRange, sortOption]);
 
-    const toggleFilterPanel = () => {
-        setIsFilterOpen(!isFilterOpen);
-    };
-
-    const toggleViewType = () => {
-        setViewType(viewType === 'grid' ? 'list' : 'grid');
-    };
-
-    const handleCategoryChange = (categoryId) => {
-        setSelectedCategories(prev => {
-            if (prev.includes(categoryId)) {
-                return prev.filter(id => id !== categoryId);
-            } else {
-                return [...prev, categoryId];
-            }
-        });
-    };
-
-    const handlePriceChange = (index, value) => {
+    const handlePriceChange = useCallback((index, value) => {
         const newRange = [...priceRange];
         newRange[index] = Number(value);
         setPriceRange(newRange);
-    };
+    }, [priceRange]);
 
-    const clearFilters = () => {
+    const clearFilters = useCallback(() => {
         setSelectedCategories([]);
         setPriceRange([0, 5000]);
         setSearchQuery('');
         setSortOption('featured');
-    };
+    }, []);
 
-    const getProductImage = (product) => {
+    const getProductImage = useCallback((product) => {
         // Check if product has multiple images
         if (product.images && Array.isArray(product.images) && product.images.length > 0) {
             return `${process.env.REACT_APP_API_URL}public/img/${product.images[0]}`; // Use first image
@@ -114,10 +98,10 @@ export default function Product() {
         }
         // Default placeholder if no image
         return '/api/placeholder/300/300';
-    };
+    }, []);
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-gray-50 min-h-screen">
             <Helmet>
                 <title>Deri Cüzdan Koleksiyonu | Toptan Deri Cüzdan | Sergio Ferrari</title>
                 <meta name="description" content="Sergio Ferrari deri cüzdan koleksiyonu. İstanbul'da üretilen, el yapımı erkek ve kadın deri cüzdanlar. Toptan deri cüzdan satışı için bizimle iletişime geçin." />
@@ -149,315 +133,257 @@ export default function Product() {
                     `}
                 </script>
             </Helmet>
-            
-            {/* Hero Banner */}
-            <div className="relative bg-black h-60 md:h-80 overflow-hidden">
-                <div className="absolute inset-0 opacity-60">
-                    <img
-                        src="/images/slider1.jpg"
-                        alt="Products"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Ürünlerimiz</h1>
-                    <div className="flex items-center text-white/80 text-sm">
-                        <Link to="/" className="hover:text-amber-400 transition-colors">Ana Sayfa</Link>
-                        <ChevronRight className="h-4 w-4 mx-2" />
-                        <span className="text-amber-400">Ürünlerimiz</span>
-                    </div>
-                </div>
-            </div>
 
-            {/* Products Section */}
-            <div className="container mx-auto px-4 py-8">
-                {/* Mobile Filter Toggle */}
-                <div className="lg:hidden mb-4">
-                    <button
-                        onClick={toggleFilterPanel}
-                        className="flex items-center space-x-2 bg-black hover:bg-opacity-90 text-white px-4 py-2 rounded-md w-full justify-center transition-colors"
-                    >
-                        <SlidersHorizontal className="h-4 w-4" />
-                        <span>{isFilterOpen ? 'Filtreleri Gizle' : 'Filtreleri Göster'}</span>
-                    </button>
-                </div>
+            {/* Compact Top Filter Bar - Full Width */}
+            <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+                <div className="w-full px-4 py-3">
+                    <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                        {/* Left Side - Search and Count */}
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
+                            <div className="flex items-center space-x-3">
+                                <div className="p-2 bg-amber-100 rounded-lg">
+                                    <ShoppingBag className="h-4 w-4 text-amber-600" />
+                                </div>
+                                <div>
+                                    <span className="text-lg font-bold text-gray-900">{filteredProducts.length}</span>
+                                    <span className="text-gray-600 ml-1 text-sm">Ürün</span>
+                                </div>
+                            </div>
+                            
+                            <div className="relative flex-1 max-w-md">
+                                <input
+                                    type="text"
+                                    placeholder="Ürün ara..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm"
+                                />
+                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                {searchQuery && (
+                                    <X
+                                        className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 cursor-pointer hover:text-gray-600"
+                                        onClick={() => setSearchQuery('')}
+                                    />
+                                )}
+                            </div>
+                        </div>
 
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Filters - Sidebar */}
-                    <div className={`lg:w-1/4 ${isFilterOpen ? 'block' : 'hidden'} lg:block`}>
-                        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold text-gray-900">Filtreler</h2>
+                        {/* Right Side - Filters and Controls */}
+                        <div className="flex flex-wrap items-center gap-3">
+                            {/* Quick Category Filter */}
+                            <select
+                                value={selectedCategories[0] || ''}
+                                onChange={(e) => setSelectedCategories(e.target.value ? [e.target.value] : [])}
+                                className="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                            >
+                                <option value="">Tüm Kategoriler</option>
+                                {categories.map(category => (
+                                    <option key={category._id} value={category._id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* Sort */}
+                            <select
+                                value={sortOption}
+                                onChange={(e) => setSortOption(e.target.value)}
+                                className="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                            >
+                                <option value="featured">Öne Çıkanlar</option>
+                                <option value="price-asc">Fiyat ↑</option>
+                                <option value="price-desc">Fiyat ↓</option>
+                                <option value="name-asc">İsim A-Z</option>
+                                <option value="name-desc">İsim Z-A</option>
+                            </select>
+
+                            {/* Price Range Inputs */}
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    placeholder="Min"
+                                    value={priceRange[0] || ''}
+                                    onChange={(e) => handlePriceChange(0, e.target.value)}
+                                    className="w-20 px-2 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                <span className="text-gray-400">-</span>
+                                <input
+                                    type="number"
+                                    placeholder="Max"
+                                    value={priceRange[1] || ''}
+                                    onChange={(e) => handlePriceChange(1, e.target.value)}
+                                    className="w-20 px-2 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                <span className="text-xs text-gray-500">₺</span>
+                            </div>
+
+                            {/* Clear Filters */}
+                            {(selectedCategories.length > 0 || searchQuery || priceRange[0] > 0 || priceRange[1] < 5000) && (
                                 <button
                                     onClick={clearFilters}
-                                    className="text-sm text-amber-600 hover:text-amber-800 transition-colors"
+                                    className="text-xs text-amber-600 hover:text-amber-700 font-medium px-3 py-2 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors duration-300"
                                 >
                                     Temizle
                                 </button>
-                            </div>
+                            )}
 
-                            {/* Search */}
-                            <div className="mb-6">
-                                <h3 className="text-lg font-medium text-gray-800 mb-3">Ara</h3>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        placeholder="Ürün ara..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                                    />
-                                    <div className="absolute right-3 top-2.5 text-gray-400">
-                                        {searchQuery ? (
-                                            <X
-                                                className="h-5 w-5 cursor-pointer hover:text-gray-600 transition-colors"
-                                                onClick={() => setSearchQuery('')}
-                                            />
-                                        ) : (
-                                            <Search className="h-5 w-5" />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Categories */}
-                            <div className="mb-6">
-                                <h3 className="text-lg font-medium text-gray-800 mb-3">Kategoriler</h3>
-                                <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
-                                    {categories.map(category => (
-                                        <div key={category._id} className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id={`category-${category._id}`}
-                                                checked={selectedCategories.includes(category._id)}
-                                                onChange={() => handleCategoryChange(category._id)}
-                                                className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                                            />
-                                            <label htmlFor={`category-${category._id}`} className="ml-2 text-gray-700 hover:text-amber-600 cursor-pointer transition-colors">
-                                                {category.name}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Price Range */}
-                            <div className="mb-6">
-                                <h3 className="text-lg font-medium text-gray-800 mb-3">Fiyat Aralığı</h3>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <div className="flex-1">
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max={priceRange[1]}
-                                            value={priceRange[0]}
-                                            onChange={(e) => handlePriceChange(0, e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                                        />
-                                    </div>
-                                    <span className="text-gray-500">-</span>
-                                    <div className="flex-1">
-                                        <input
-                                            type="number"
-                                            min={priceRange[0]}
-                                            max="10000"
-                                            value={priceRange[1]}
-                                            onChange={(e) => handlePriceChange(1, e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="relative h-2 bg-gray-200 rounded-full">
-                                    <div
-                                        className="absolute h-full bg-amber-500 rounded-full"
-                                        style={{
-                                            left: `${(priceRange[0] / 5000) * 100}%`,
-                                            right: `${100 - (priceRange[1] / 5000) * 100}%`
-                                        }}
-                                    ></div>
-                                </div>
-                                <div className="flex justify-between mt-1 text-xs text-gray-500">
-                                    <span>0₺</span>
-                                    <span>5000₺</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Products Content */}
-                    <div className="flex-1">
-                        {/* Toolbar */}
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                            <div className="flex items-center">
-                                <ShoppingBag className="h-5 w-5 text-amber-600 mr-2" />
-                                <span className="text-gray-700">{filteredProducts.length} Ürün</span>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                {/* Sort */}
-                                <div className="relative">
-                                    <select
-                                        value={sortOption}
-                                        onChange={(e) => setSortOption(e.target.value)}
-                                        className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent cursor-pointer text-gray-700"
-                                    >
-                                        <option value="featured">Öne Çıkanlar</option>
-                                        <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
-                                        <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
-                                        <option value="name-asc">İsim: A-Z</option>
-                                        <option value="name-desc">İsim: Z-A</option>
-                                    </select>
-                                    <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
-                                </div>
-
-                                {/* View Type Toggle */}
-                                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                                    <button
-                                        onClick={() => setViewType('grid')}
-                                        className={`px-3 py-2 ${viewType === 'grid' ? 'bg-amber-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} transition-colors`}
-                                    >
-                                        <Grid3X3 className="h-4 w-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => setViewType('list')}
-                                        className={`px-3 py-2 ${viewType === 'list' ? 'bg-amber-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} transition-colors`}
-                                    >
-                                        <List className="h-4 w-4" />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Products Display */}
-                        {filteredProducts.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-center">
-                                <ShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
-                                <h3 className="text-xl font-medium text-gray-700 mb-2">Ürün Bulunamadı</h3>
-                                <p className="text-gray-500 mb-6">Arama kriterlerinize uygun ürün bulunamadı. Filtreleri değiştirerek tekrar deneyin.</p>
+                            {/* View Toggle */}
+                            <div className="flex items-center bg-gray-100 rounded-lg p-1">
                                 <button
-                                    onClick={clearFilters}
-                                    className="px-6 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors"
+                                    onClick={() => setViewType('grid')}
+                                    className={`p-1.5 rounded transition-all duration-300 ${
+                                        viewType === 'grid' 
+                                            ? 'bg-white text-amber-600 shadow-sm' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}
                                 >
-                                    Filtreleri Temizle
+                                    <Grid3X3 className="h-4 w-4" />
+                                </button>
+                                <button
+                                    onClick={() => setViewType('list')}
+                                    className={`p-1.5 rounded transition-all duration-300 ${
+                                        viewType === 'list' 
+                                            ? 'bg-white text-amber-600 shadow-sm' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                >
+                                    <List className="h-4 w-4" />
                                 </button>
                             </div>
-                        ) : (
-                            viewType === 'grid' ? (
-                                // Grid View
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {filteredProducts.map(product => (
-                                        <div key={product._id} className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                                            <div className="relative aspect-w-1 aspect-h-1 bg-gray-100">
-                                                <img
-                                                    src={getProductImage(product)}
-                                                    alt={product.name}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    onError={(e) => {
-                                                        e.target.src = '/api/placeholder/300/300';
-                                                    }}
-                                                />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                                    <Link
-                                                        to={`/product/${product._id}`}
-                                                        className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
-                                                    >
-                                                        Ürünü İncele
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                            <div className="p-4">
-                                                <div className="flex items-center text-amber-400 mb-2">
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                </div>
-                                                <h3 className="text-gray-900 font-medium text-lg mb-1 truncate">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-gray-500 text-sm line-clamp-2 mb-2">
-                                                    {product.description}
-                                                </p>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-black font-bold text-lg">{product.price}₺</span>
-                                                    <Link
-                                                        to={`/product/${product._id}`}
-                                                        className="text-amber-600 hover:text-amber-800 text-sm font-medium transition-colors"
-                                                    >
-                                                        Detaylar
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                // List View
-                                <div className="space-y-4">
-                                    {filteredProducts.map(product => (
-                                        <div key={product._id} className="flex flex-col sm:flex-row bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                                            <div className="sm:w-48 h-48 bg-gray-100">
-                                                <img
-                                                    src={getProductImage(product)}
-                                                    alt={product.name}
-                                                    className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        e.target.src = '/api/placeholder/300/300';
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="p-6 flex-1 flex flex-col">
-                                                <div className="flex items-center text-amber-400 mb-2">
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                    <Star className="h-4 w-4 fill-current" />
-                                                </div>
-                                                <h3 className="text-gray-900 font-medium text-lg mb-2">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-gray-500 text-sm mb-4 flex-grow">
-                                                    {product.description}
-                                                </p>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-black font-bold text-xl">{product.price}₺</span>
-                                                    <Link
-                                                        to={`/product/${product._id}`}
-                                                        className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors"
-                                                    >
-                                                        Ürünü İncele
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                        )}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Custom CSS for scrollbars */}
-            <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #b8860b;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #8b6914;
-        }
-      `}</style>
+            {/* Full-Screen Products - No Sidebar, Full Width */}
+            <div className="w-full px-4 py-6">
+
+                {/* Full-Screen Products Display */}
+                {filteredProducts.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <ShoppingBag className="h-8 w-8 text-gray-400" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Ürün Bulunamadı</h3>
+                        <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                            Arama kriterlerinize uygun ürün bulunamadı. Filtreleri değiştirerek tekrar deneyin.
+                        </p>
+                        <button
+                            onClick={clearFilters}
+                            className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300"
+                        >
+                            Filtreleri Temizle
+                        </button>
+                    </div>
+                ) : (
+                    viewType === 'grid' ? (
+                        // Compact Grid View - Smaller Cards, More Products Per Row
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+                            {filteredProducts.map(product => (
+                                <div key={product._id} className="group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                                    <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                                        <img
+                                            src={getProductImage(product)}
+                                            alt={product.name}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            onError={(e) => {
+                                                e.target.src = '/api/placeholder/250/250';
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></div>
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <Link
+                                                to={`/product/${product._id}`}
+                                                className="bg-white hover:bg-gray-50 text-gray-900 px-3 py-2 rounded-lg text-sm font-medium shadow-md transform translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+                                            >
+                                                İncele
+                                            </Link>
+                                        </div>
+                                        {/* Premium Badge - Smaller */}
+                                        <div className="absolute top-2 left-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                                            Premium
+                                        </div>
+                                    </div>
+                                    <div className="p-3">
+                                        <div className="flex items-center text-amber-400 mb-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={`star-grid-${product._id}-${i}`} className="h-3 w-3 fill-current" />
+                                            ))}
+                                            <span className="text-xs text-gray-500 ml-1">(4.8)</span>
+                                        </div>
+                                        <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 group-hover:text-amber-600 transition-colors duration-300">
+                                            {product.name}
+                                        </h3>
+                                        <p className="text-gray-600 text-xs line-clamp-2 mb-2">
+                                            {product.description}
+                                        </p>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-lg font-bold text-gray-900">{product.price}₺</span>
+                                            <Link
+                                                to={`/product/${product._id}`}
+                                                className="text-amber-600 hover:text-amber-700 text-xs font-medium transition-colors duration-300 flex items-center space-x-1"
+                                            >
+                                                <span>Detay</span>
+                                                <ChevronRight className="h-3 w-3" />
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        // List View
+                        <div className="space-y-4">
+                            {filteredProducts.map(product => (
+                                <div key={product._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
+                                    <div className="flex flex-col sm:flex-row">
+                                        <div className="sm:w-48 h-48 sm:h-32 bg-gray-100 overflow-hidden">
+                                            <img
+                                                src={getProductImage(product)}
+                                                alt={product.name}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                onError={(e) => {
+                                                    e.target.src = '/api/placeholder/200/200';
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="p-4 flex-1 flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex items-center text-amber-400 mb-2">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={`star-list-${product._id}-${i}`} className="h-3 w-3 fill-current" />
+                                                    ))}
+                                                    <span className="text-xs text-gray-500 ml-2">(4.8)</span>
+                                                </div>
+                                                <h3 className="text-lg font-medium text-gray-900 mb-2 hover:text-amber-600 transition-colors duration-300">
+                                                    {product.name}
+                                                </h3>
+                                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                                                    {product.description}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="text-xl font-bold text-gray-900">{product.price}₺</span>
+                                                    <span className="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                                                        Premium
+                                                    </span>
+                                                </div>
+                                                <Link
+                                                    to={`/product/${product._id}`}
+                                                    className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+                                                >
+                                                    Ürünü İncele
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )
+                )}
+            </div>
 
             <Footer />
         </div>
