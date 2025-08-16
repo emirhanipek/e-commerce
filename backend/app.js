@@ -8,9 +8,25 @@ const path = require('path');
 
 // .env dosyasından çevre değişkenlerini yükle
 dotenv.config();
-app.use(cors());
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+
+// CORS configuration for file uploads
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
+// Increase payload limits for file uploads
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+
+// Set timeout for large file uploads (5 minutes)
+app.use((req, res, next) => {
+    req.setTimeout(300000); // 5 minutes
+    res.setTimeout(300000); // 5 minutes
+    next();
+});
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -25,8 +41,8 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB limit per file
-        files: 10 // Max 10 files
+        fileSize: 15 * 1024 * 1024, // 15MB limit per file (increased from 10MB)
+        files: 10 // Max 10 files (increased from 5)
     },
     fileFilter: (req, file, cb) => {
         // Only allow image files
