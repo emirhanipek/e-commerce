@@ -129,7 +129,8 @@ exports.updateCategory = async (req, res) => {
 // Kategori sil
 exports.deleteCategory = async (req, res) => {
     try {
-        const deletedCategory = await Category.findByIdAndRemove(req.params.id);
+        const categoryId = req.params.id;
+        const deletedCategory = await Category.findByIdAndRemove(categoryId);
         
         if (!deletedCategory) {
             return res.status(404).json({
@@ -143,10 +144,20 @@ exports.deleteCategory = async (req, res) => {
             message: 'Kategori başarıyla silindi'
         });
     } catch (error) {
+        // Detaylı hata loglama - debug için gerekli bilgileri logla
+        console.error('Category deletion error:', {
+            categoryId: req.params.id,
+            userId: req.user?.id || 'anonymous',
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+        
         res.status(500).json({
             success: false,
             message: 'Kategori silinirken bir hata oluştu',
-            error: error.message
+            // Production ortamında hassas bilgileri gizle
+            error: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
         });
     }
 };
