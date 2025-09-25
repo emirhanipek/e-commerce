@@ -1,4 +1,5 @@
 const Category = require('../model/category');
+const mongoose = require('mongoose');
 
 // Tüm kategorileri getir
 exports.getCategories = async (req, res) => {
@@ -20,6 +21,14 @@ exports.getCategories = async (req, res) => {
 // Belirli bir kategoriyi ID'ye göre getir
 exports.getCategoryById = async (req, res) => {
     try {
+        // MongoDB ObjectId validation
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz kategori ID formatı'
+            });
+        }
+
         const category = await Category.findById(req.params.id);
         
         if (!category) {
@@ -89,6 +98,14 @@ exports.createCategory = async (req, res) => {
 // Kategori güncelle
 exports.updateCategory = async (req, res) => {
     try {
+        // MongoDB ObjectId validation
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz kategori ID formatı'
+            });
+        }
+
         const { name } = req.body;
         
         if (!name) {
@@ -130,7 +147,17 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const deletedCategory = await Category.findByIdAndRemove(categoryId);
+        
+        // MongoDB ObjectId validation
+        if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz kategori ID formatı'
+            });
+        }
+
+        // Use findByIdAndDelete instead of deprecated findByIdAndRemove
+        const deletedCategory = await Category.findByIdAndDelete(categoryId);
         
         if (!deletedCategory) {
             return res.status(404).json({
@@ -144,13 +171,12 @@ exports.deleteCategory = async (req, res) => {
             message: 'Kategori başarıyla silindi'
         });
     } catch (error) {
-        // Detaylı hata loglama - debug için gerekli bilgileri logla
+        // Secure error logging - only log safe information without stack traces
         console.error('Category deletion error:', {
             categoryId: req.params.id,
-            userId: req.user?.id || 'anonymous',
+            userId: req.user && req.user.id ? req.user.id : null,
             timestamp: new Date().toISOString(),
-            error: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            error: error.message
         });
         
         res.status(500).json({
