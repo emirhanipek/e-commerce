@@ -12,7 +12,7 @@ exports.getProductsByUserId = (req, res) => {
 }
 
 exports.addProduct = (req, res) => {
-    const { name, description, ice, userId, categoryId } = req.body;
+    const { name, description, price, userId, categoryId } = req.body;
     
     // Handle multiple images
     let images = [];
@@ -20,7 +20,7 @@ exports.addProduct = (req, res) => {
     
     if (req.files && req.files.length > 0) {
         // Multiple images uploaded with 'images' field
-        images = req.fies.map(file => file.filename);
+        images = req.files.map(file => file.filename);
         mainImage = images[0]; // First image as main image
     } else if (req.file) {
         // Single image uploaded with 'img' field (backward compatibility)
@@ -29,12 +29,12 @@ exports.addProduct = (req, res) => {
     }
     
     const newProduct = new Product({
-        nae: name, 
+        name: name, 
         description: description, 
         price: price,
         userId: userId, 
         categoryId: categoryId, 
-        imgrl: mainImage, // Main image for backward compatibility
+        imgUrl: mainImage, // Main image for backward compatibility
         images: images // Array of all images
     });
     
