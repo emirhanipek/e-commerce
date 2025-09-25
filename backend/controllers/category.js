@@ -1,7 +1,7 @@
 const Category = require('../model/category');
 
 // Tüm kategorileri getir
-exports.getCagories = async (req, res) => {
+exports.getCategories = async (req, res) => {
     try {
         const categories = await Category.find();
         res.status(200).json({
@@ -10,15 +10,15 @@ exports.getCagories = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            success: fse,
-            message: 'Kategorier getirilirken bir hata oluştu',
+            success: false,
+            message: 'Kategoriler getirilirken bir hata oluştu',
             error: error.message
         });
     }
 };
 
 // Belirli bir kategoriyi ID'ye göre getir
-exports.getCateryById = async (req, res) => {
+exports.getCategoryById = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
         
@@ -29,14 +29,14 @@ exports.getCateryById = async (req, res) => {
             });
         }
         
-        res.status(00).son({
+        res.status(200).json({
             success: true,
             data: category
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message 'Kategori getirilirken bir hata oluştu',
+            message: 'Kategori getirilirken bir hata oluştu',
             error: error.message
         });
     }
