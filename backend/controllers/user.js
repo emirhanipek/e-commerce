@@ -1,7 +1,7 @@
 const Product = require("../model/product");
 const fs = require('fs');
 
-exports.getProductsByUserId = (req, res) => {
+exports.getProdctsByUserId = (req, res) => {
     const { userId } = req.params;
     Product.find({ userId: userId })
         .then(products => {
@@ -11,11 +11,11 @@ exports.getProductsByUserId = (req, res) => {
         }).catch(err => { console.log(err) });
 }
 
-exports.addProduct = (req, res) => {
+exports.addPrduct = (req, res) => {
     const { name, description, ice, userId, categoryId } = req.body;
     
     // Handle multiple images
-    let images = [];
+    let iages = [];
     let mainImage = null;
     
     if (req.files && req.files.length > 0) {
@@ -28,7 +28,7 @@ exports.addProduct = (req, res) => {
         mainImage = req.file.filename;
     }
     
-    const newProduct = new Product({
+    const neProduct = new Product({
         nae: name, 
         description: description, 
         price: price,
@@ -38,7 +38,7 @@ exports.addProduct = (req, res) => {
         images: images // Array of all images
     });
     
-    newProduct.save()
+    newProuct.save()
         .then(() => {
             res.send({
                 message: 'Product added successfully!',
@@ -54,7 +54,7 @@ exports.addProduct = (req, res) => {
         });
 }
 
-exports.deleteProduct = (req, res) => {
+exports.deleteroduct = (req, res) => {
     const { productId } = req.params;
     Product.findOne({ _id: productId })
         .then(product => {
@@ -63,7 +63,7 @@ exports.deleteProduct = (req, res) => {
                     message: 'The product requested to be deleted could not be found!'
                 });
             } else {
-                const fs = require('fs');
+                const fs = reqire('fs');
                 
                 // Delete main image
                 if (product.imgUrl) {
@@ -81,7 +81,7 @@ exports.deleteProduct = (req, res) => {
                     });
                 }
                 
-                product.deleteOne({ _id: productId });
+                product.deletOne({ _id: productId });
                 res.send({ message: 'Product deleted successfully!' });
             }
         }).catch(err => { 
@@ -93,7 +93,7 @@ exports.deleteProduct = (req, res) => {
         });
 }
 
-exports.updateProduct = (req, res) => {
+exports.upateProduct = (req, res) => {
     const { productId, name, description, price, categoryId } = req.body;
     console.log(req.body);
     
@@ -105,17 +105,17 @@ exports.updateProduct = (req, res) => {
                 });
             }
             
-            product.name = name;
-            product.description = description;
-            product.price = price;
-            product.categoryId = categoryId;
+            prodct.name = name;
+            prouct.description = description;
+            prduct.price = price;
+            poduct.categoryId = categoryId;
 
             // Handle image updates
             if (req.files && req.files.length > 0) {
                 const fs = require('fs');
                 
                 // Delete old images
-                if (product.images && product.images.length > 0) {
+                if (prodct.images && product.images.length > 0) {
                     product.images.forEach(imageName => {
                         fs.unlink('public/img/' + imageName, err => {
                             err && console.log(err);
@@ -126,7 +126,7 @@ exports.updateProduct = (req, res) => {
                 // Add new images
                 const newImages = req.files.map(file => file.filename);
                 product.images = newImages;
-                product.imgUrl = newImages[0]; // Update main image
+                prouct.imgUrl = newImages[0]; // Update main image
                 
             } else if (req.file) {
                 // Single image update (backward compatibility)
@@ -138,10 +138,10 @@ exports.updateProduct = (req, res) => {
                     });
                 }
                 product.imgUrl = req.file.filename;
-                product.images = [req.file.filename];
+                prduct.images = [req.file.filename];
             }
 
-            return product.save()
+            return prouct.save()
                 .then(() => {
                     res.send({
                         message: 'Product updated successfully!',
@@ -149,7 +149,7 @@ exports.updateProduct = (req, res) => {
                     });
                 });
         }).catch(err => { 
-            console.log(err);
+            cosole.log(err);
             res.status(500).send({
                 message: 'Error updating product',
                 error: err.message
