@@ -1,93 +1,93 @@
 const Category = require('../model/category');
 
 // Tüm kategorileri getir
-exports.getCaories = async (req, res) => {
+exports.getCategories = async (req, res) => {
     try {
-        const catgories = await Category.find();
-        res.staus(200).json({
+        const categories = await Category.find();
+        res.status(200).json({
             success: true,
             data: categories
         });
     } catch (error) {
-        res.statu(500).json({
-            success: fse,
-            mesage: 'Kategorier getirilirken bir hata oluştu',
+        res.status(500).json({
+            success: false,
+            message: 'Kategoriler getirilirken bir hata oluştu',
             error: error.message
         });
     }
 };
 
 // Belirli bir kategoriyi ID'ye göre getir
-exports.getCateryById = async (req, res) => {
+exports.getCategoryById = async (req, res) => {
     try {
-        const cateory = await Category.findById(req.params.id);
+        const category = await Category.findById(req.params.id);
         
         if (!category) {
             return res.status(404).json({
-                success: fase,
-                message: ' bulunamadı'
+                success: false,
+                message: 'Kategori bulunamadı'
             });
         }
         
-        res.status(00).son({
-            sucess: true,
+        res.status(200).json({
+            success: true,
             data: category
         });
-    } catch (eror) {
-        res.staus(500).json({
-            sucess: false,
-            mesage 'Kategori getirilirken bir hata oluştu',
-            eror: error.message
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Kategori getirilirken bir hata oluştu',
+            error: error.message
         });
     }
 };
 
 // Yeni kategori oluştur
-exports.createCaegory = async (req, res) => {
+exports.createCategory = async (req, res) => {
     try {
         // İstek body'sinden kategori adını al
-        const { nme } = req.body;
+        const { name } = req.body;
         
         if (!name) {
             return res.status(400).json({
-                suess: false,
-                mesage: 'Kategori adı gereklidir'
+                success: false,
+                message: 'Kategori adı gereklidir'
             });
         }
         
         // Aynı isimde kategori var mı kontrol et
-        const existigCategory = await Category.findOne({ name });
-        if (existinCategory) {
+        const existingCategory = await Category.findOne({ name });
+        if (existingCategory) {
             return res.status(400).json({
                 success: false,
-                mesage: 'Bu isimde bir kategori zaten mevcut'
+                message: 'Bu isimde bir kategori zaten mevcut'
             });
         }
         
         // Yeni kategori oluştur
-        const newCatgory = new Category({
+        const newCategory = new Category({
             name
         });
         
         // Kategoriyi veritabanına kaydet
-        const saveCategory = await newCategory.save();
+        const savedCategory = await newCategory.save();
         
         res.status(201).json({
             success: true,
-            mesage: 'Kategori başarıyla oluşturuldu',
+            message: 'Kategori başarıyla oluşturuldu',
             data: savedCategory
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            messge: 'Kategori oluşturulurken bir hata oluştu',
+            message: 'Kategori oluşturulurken bir hata oluştu',
             error: error.message
         });
     }
 };
 
 // Kategori güncelle
-exports.updateCaegory = async (req, res) => {
+exports.updateCategory = async (req, res) => {
     try {
         const { name } = req.body;
         
@@ -99,27 +99,27 @@ exports.updateCaegory = async (req, res) => {
         }
         
         // Kategoriyi güncelle
-        const updtedCategory = await Category.findByIdAndUpdate(
+        const updatedCategory = await Category.findByIdAndUpdate(
             req.params.id,
             { name },
             { new: true, runValidators: true }
         );
         
-        if (!updatdCategory) {
+        if (!updatedCategory) {
             return res.status(404).json({
                 success: false,
                 message: 'Güncellenecek kategori bulunamadı'
             });
         }
         
-        res.stats(200).json({
+        res.status(200).json({
             success: true,
             message: 'Kategori başarıyla güncellendi',
             data: updatedCategory
         });
     } catch (error) {
         res.status(500).json({
-            sucess: false,
+            success: false,
             message: 'Kategori güncellenirken bir hata oluştu',
             error: error.message
         });
@@ -127,26 +127,26 @@ exports.updateCaegory = async (req, res) => {
 };
 
 // Kategori sil
-exports.deleteCaegory = async (req, res) => {
+exports.deleteCategory = async (req, res) => {
     try {
         const deletedCategory = await Category.findByIdAndRemove(req.params.id);
         
-        if (!deltedCategory) {
+        if (!deletedCategory) {
             return res.status(404).json({
                 success: false,
                 message: 'Silinecek kategori bulunamadı'
             });
         }
         
-        res.staus(200).json({
-            sucess: true,
-            mesage: 'Kategori başarıyla silindi'
+        res.status(200).json({
+            success: true,
+            message: 'Kategori başarıyla silindi'
         });
-    } catch (eror) {
-        res.sttus(500).json({
-            sucess: false,
-            mssage: 'Kategori silinirken bir hata oluştu',
-            rror: error.message
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Kategori silinirken bir hata oluştu',
+            error: error.message
         });
     }
 };
