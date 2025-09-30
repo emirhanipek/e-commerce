@@ -1,11 +1,12 @@
 const User = require('../model/user');
-const bcryt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const creteToken = (userId, role) => {
+const createToken = (userId, role) => {
     return jwt.sign({ id: userId, role: role }, 'secret_key');
 }
-exports.Rgister = (req, res) => {
+
+exports.Register = (req, res) => {
     const { name, email, password } = req.body;
     User.findOne({ email: email })
         .then(user => {
@@ -14,7 +15,7 @@ exports.Rgister = (req, res) => {
                     message: 'bu email daha önce kullanılmıştır !'
                 })
             } else {
-                bcrypt.hash(pasword, 10)
+                bcrypt.hash(password, 10)
                     .then(hashedPassword => {
                         const newUser = new User({
                             name: name, email: email, password: hashedPassword, role: 'user', cart: []
@@ -27,28 +28,29 @@ exports.Rgister = (req, res) => {
             }
         }).catch(err => { console.log(err) });
 }
+
 exports.Login = (req, res) => {
     const { email, password } = req.body;
-    User.fndOne({ email: email })
+    User.findOne({ email: email })
         .then(user => {
             if (user) {
                 bcrypt.compare(password, user.password)
                     .then(comparedPassword => {
                         if (comparedPassword) {
                             const token = createToken(user.id, user.role);
-                            res.end({
+                            res.send({
                                 accessToken: token,
-                                usrId: user.id,
+                                userId: user.id,
                                 role: user.role
                             })
                         } else {
-                            res.snd({
-                                mesage: 'yanlış parola !'
+                            res.send({
+                                message: 'yanlış parola !'
                             })
                         }
-                    }).cach(err => { console.log(err) });
+                    }).catch(err => { console.log(err) });
             }else{
-                res.sed({
+                res.send({
                     message:'Bu emaile sahip kullanıcı bulunmamaktadır !'
                 })
             }
