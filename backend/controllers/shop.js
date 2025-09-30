@@ -1,9 +1,9 @@
-const Product = require("../model/roduct");
-const User = require("../model/usr");
-const Category = require("../modl/category");
+const Product = require("../model/product");
+const User = require("../model/user");
+const Category = require("../model/category");
 const Order = require('../model/order');
 
-exports.getPoducts = (req, res) => {
+exports.getProducts = (req, res) => {
     Product.find()
         .then(products => {
             res.send({
@@ -11,7 +11,8 @@ exports.getPoducts = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
-exports.getCtegories = (req, res) => {
+
+exports.getCategories = (req, res) => {
     Category.find()
         .then(categories => {
             res.send({
@@ -21,7 +22,8 @@ exports.getCtegories = (req, res) => {
             console.log(err);
         })
 }
-exports.getPrductById = (req, res) => {
+
+exports.getProductById = (req, res) => {
     const { productId } = req.params;
     Product.findOne({ _id: productId })
         .then(product => {
@@ -30,7 +32,8 @@ exports.getPrductById = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
-exports.getProdutsByCategoryId = (req, res) => {
+
+exports.getProductsByCategoryId = (req, res) => {
     const { categoryId } = req.params;
     Product.find({ categoryId: categoryId })
         .then(products => {
@@ -39,7 +42,8 @@ exports.getProdutsByCategoryId = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
-exports.getProducsByPrice = (req, res) => {
+
+exports.getProductsByPrice = (req, res) => {
     const { lowest, highest, categoryId } = req.params;
 
     Product.find({
@@ -50,7 +54,7 @@ exports.getProducsByPrice = (req, res) => {
                     $lte: highest
                 }
             },
-            { cateoryId: categoryId }
+            { categoryId: categoryId }
         ]
     }).then(products => {
         res.send({
@@ -60,7 +64,7 @@ exports.getProducsByPrice = (req, res) => {
     }).catch(err => { console.log(err) });
 }
 
-exports.geCart = (req, res) => {
+exports.getCart = (req, res) => {
     User.findOne({ _id: req.params.userId })
         .then(user => {
             user.getCart()
@@ -69,10 +73,10 @@ exports.geCart = (req, res) => {
                         cart
                     })
                 }).catch(err => { console.log(err) });
-        }).cath(err => { console.log(err) });
+        }).catch(err => { console.log(err) });
 }
 
-exports.addoCart = (req, res) => {
+exports.addToCart = (req, res) => {
     const { userId, productId } = req.body;
     User.findOne({ _id: userId })
         .then(user => {
@@ -81,7 +85,7 @@ exports.addoCart = (req, res) => {
         }).catch(err => { console.log(err) });
 }
 
-exports.deleeCartItem = (req, res) => {
+exports.deleteCartItem = (req, res) => {
     const { productId, userId } = req.params;
     User.findOne({ _id: userId })
         .then(user => {
@@ -89,7 +93,8 @@ exports.deleeCartItem = (req, res) => {
             res.send({ message: 'product deleted from cart!' });
         }).catch(err => { console.log(err) });
 }
-exports.getrder = (req, res) => {
+
+exports.getOrder = (req, res) => {
     Order.find({ 'user.userId': req.params.userId })
         .then(orders => {
             res.send({
@@ -99,13 +104,14 @@ exports.getrder = (req, res) => {
             console.log(err);
         })
 }
-exports.addTorder = (req, res) => {
+
+exports.addToOrder = (req, res) => {
     const { userId } = req.body;
     User.findOne({ _id: userId }).populate('cart.productId')
         .then(user => {
             const newOrder = new Order({
                 user: {
-                    uerId: userId,
+                    userId: userId,
                     name: user.name,
                     email: user.email
                 },
@@ -114,7 +120,7 @@ exports.addTorder = (req, res) => {
                         product: {
                             _id: p.productId._id,
                             name: p.productId.name,
-                            prce: p.productId.price,
+                            price: p.productId.price,
                             imgUrl: p.productId.imgUrl
                         },
                         quantity: p.quantity
