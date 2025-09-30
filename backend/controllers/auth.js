@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const createToken = (userId, role) => {
     return jwt.sign({ id: userId, role: role }, 'secret_key');
 }
+
 exports.Register = (req, res) => {
     const { name, email, password } = req.body;
     User.findOne({ email: email })
@@ -27,6 +28,7 @@ exports.Register = (req, res) => {
             }
         }).catch(err => { console.log(err) });
 }
+
 exports.Login = (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email: email })

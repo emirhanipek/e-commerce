@@ -11,6 +11,7 @@ exports.getProducts = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
+
 exports.getCategories = (req, res) => {
     Category.find()
         .then(categories => {
@@ -21,6 +22,7 @@ exports.getCategories = (req, res) => {
             console.log(err);
         })
 }
+
 exports.getProductById = (req, res) => {
     const { productId } = req.params;
     Product.findOne({ _id: productId })
@@ -30,6 +32,7 @@ exports.getProductById = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
+
 exports.getProductsByCategoryId = (req, res) => {
     const { categoryId } = req.params;
     Product.find({ categoryId: categoryId })
@@ -39,6 +42,7 @@ exports.getProductsByCategoryId = (req, res) => {
             })
         }).catch(err => { console.log(err) });
 }
+
 exports.getProductsByPrice = (req, res) => {
     const { lowest, highest, categoryId } = req.params;
 
@@ -89,6 +93,7 @@ exports.deleteCartItem = (req, res) => {
             res.send({ message: 'product deleted from cart!' });
         }).catch(err => { console.log(err) });
 }
+
 exports.getOrder = (req, res) => {
     Order.find({ 'user.userId': req.params.userId })
         .then(orders => {
@@ -99,6 +104,7 @@ exports.getOrder = (req, res) => {
             console.log(err);
         })
 }
+
 exports.addToOrder = (req, res) => {
     const { userId } = req.body;
     User.findOne({ _id: userId }).populate('cart.productId')
