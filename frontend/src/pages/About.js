@@ -54,7 +54,7 @@ export default function About() {
       </section>
 
       {/* Story Section */}
-      <section className="py-24 bg-white">
+      <section className="py-18 bg-white">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -85,10 +85,10 @@ export default function About() {
       </section>
 
       {/* Values Section */}
-      <section className="py-24 bg-amber-50">
-        <div className="container max-w-6xl mx-auto px-4">
+      <section className="py-18 bg-red-50">
+        <div className="container max-w-6xl mx-auto px-2">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-amber-900 mb-4 tracking-wide">Değerlerimiz</h2>
+            <h2 className="text-4xl font-light text-amber-900 mb-2 tracking-wide">Değerlerimiz</h2>
             <p className="text-lg text-gray-700 max-w-2xl mx-auto">
               Kalite, güvenilirlik ve müşteri memnuniyeti odaklı yaklaşımımız
             </p>
@@ -115,7 +115,7 @@ export default function About() {
                 işimizin en temel prensibidir.
               </p>
             </div>
-            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 hover:-translate-y-1 transform transition-transform">
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 hover:-translate-y-1 transform transition-transform">
               <h3 className="text-2xl font-medium text-amber-800 mb-4">Sürdürülebilirlik</h3>
               <p className="text-gray-700">
                 Çevreye saygılı üretim süreçleri ve doğal malzemelerin 
@@ -128,14 +128,14 @@ export default function About() {
 
       {/* Process Section */}
       <section className="py-24 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
+        <div className="container max-w-6xl mx-auto px-2">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-amber-900 mb-4 tracking-wide">Üretim Sürecimiz</h2>
             <p className="text-lg text-gray-700 max-w-2xl mx-auto">
               Her ürün, titiz bir süreç sonunda hayat bulur
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-amber-500 text-white rounded-full flex items-center justify-center text-xl font-semibold mx-auto mb-6 shadow-lg">01</div>
               <h3 className="text-xl font-medium text-amber-800 mb-3">Hammadde Seçimi</h3>
